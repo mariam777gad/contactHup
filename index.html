@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ContactHup</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/all.min.css" />
+  </head>
+  <body>
+    <header class="position-relative">
+      <nav class="navbar navbar-expand-lg bg-white fixed-top mb-5">
+        <div class="container py-2">
+          <div class="d-flex align-items-center">
+            <div class="bg-violet-700 text-white p-2 rounded-3">
+              <i class="fa-solid fa-address-book fs-5"></i>
+            </div>
+            <div class="mx-3">
+              <h4 class="mb-0 fw-bold">
+                Contact<span class="text-violet-600">Hub</span>
+              </h4>
+              <span class="text-gray-500 text-xs fw-medium"
+                >Smart Contact Manager</span
+              >
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-around w-25">
+            <button
+              onclick="getUserInfo()"
+              class="btn rounded-3 fw-medium text-white"
+            >
+              <i class="fa-solid fa-plus mx-1 text-xs fw-semibold"></i> Add
+              Contact
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav m-auto w-100">
+                <li class="nav-item text-gray-500 mx-2 px-2 py-1 rounded-2">
+                  <i class="fa-solid fa-bell text-sm"></i>
+                </li>
+                <li class="nav-item text-gray-500 mx-2 px-2 py-1 rounded-2">
+                  <i class="fa-solid fa-gear text-sm"></i>
+                </li>
+              </ul>
+            </div>
+            <div class="navbar-img rounded-3 overflow-hidden">
+              <img src="images/avatar-3.jpg" alt="" />
+            </div>
+          </div>
+        </div>
+      </nav>
+      <section id="userWindow" class="container-fluid position-absolute d-none">
+        <div
+          class="row user-data-container position-absolute bg-white p-3 rounded-4 m-auto"
+        >
+          <div class="d-flex justify-content-between border-bottom pb-2">
+            <h5 class="fw-bold">Add New Contact</h5>
+            <input
+              onclick="closeUserWindow()"
+              type="checkbox"
+              id="closeIcon"
+              class="d-none"
+            />
+            <label for="closeIcon" class="text-gray-300"
+              ><i class="fa-solid fa-xmark"></i
+            ></label>
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center m-auto my-5 bg-blue-600 rounded-circle  fs-3 overflow-hidden text-white"
+            id="userIconImg"
+          >
+           <i class="fa-solid fa-user"></i>
+
+            <!-- <img src="" alt="" /> -->
+          </div>
+          <div class="text-center">
+            <input
+              type="file"
+              onchange="uploadImage(this)"
+              id="userImage"
+              name="userImage"
+              hidden
+            />
+            <label for="userImage">
+              <span class="img-select bg-gray-200 p-2 rounded-2 text-gray-600"
+                ><i class="fa-solid fa-camera"></i>
+                <span class="fw-medium">Change Photo</span></span
+              ></label
+            >
+          </div>
+
+          <div class="my-3">
+            <label for="userName" class="text-gray-700 fw-medium mb-1 text-sm"
+              >Full Name <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              name="userName"
+              id="userName"
+              class="form-control"
+              placeholder="Enter full name"
+            />
+          </div>
+          <div class="my-2">
+            <label for="userNumber" class="text-gray-700 fw-medium mb-1 text-sm"
+              >Phone Number <span class="text-red-500">*</span></label
+            >
+            <input
+              type="number"
+              name="userNumber"
+              id="userNumber"
+              class="form-control"
+              placeholder="e.g.,01029651324"
+            />
+          </div>
+          <div class="my-2">
+            <label for="userEmail" class="text-gray-700 fw-medium mb-1 text-sm"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              name="userEmail"
+              id="userEmail"
+              class="form-control"
+              placeholder="name@example.com"
+            />
+          </div>
+          <div class="my-2">
+            <label
+              for="userAddress"
+              class="text-gray-700 fw-medium mb-1 text-sm"
+              >Address</label
+            >
+            <input
+              type="text"
+              name="userAddress"
+              id="userAddress"
+              class="form-control"
+              placeholder="Enter address"
+            />
+          </div>
+          <div class="my-2">
+            <label for="userGroup" class="text-gray-700 fw-medium mb-1 text-sm"
+              >Group</label
+            >
+            <select name="userGroup" id="userGroup" class="form-select">
+              <option value="select">Select a group</option>
+              <option value="family">Family</option>
+              <option value="friends">Friends</option>
+              <option value="work">Work</option>
+              <option value="school">School</option>
+              <option value="other">other</option>
+            </select>
+          </div>
+          <div class="my-2">
+            <label
+              for="userDescription"
+              class="text-gray-700 fw-medium mb-1 text-sm"
+              >Notes</label
+            >
+            <textarea
+              name="userDescription"
+              id="userDescription"
+              class="form-control"
+              placeholder="Add notes about this contact"
+            ></textarea>
+          </div>
+          <div class="d-flex my-3 check-input-style">
+            <div class="me-3 d-flex justify-content-center align-items-center">
+              <input type="checkbox" name="userFavorite" id="userFavorite" />
+              <label
+                for="userFavorite"
+                class="text-gray-700 fw-medium text-sm ms-2"
+                ><i class="fa-solid fa-star text-amber-400"></i> Favorite</label
+              >
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center">
+              <input type="checkbox" name="userEmergency" id="userEmergency" />
+              <label
+                for="userEmergency"
+                class="text-gray-700 fw-medium text-sm ms-2"
+                ><i class="fa-solid fa-heart-pulse text-red-500"></i>
+                Emergency</label
+              >
+            </div>
+          </div>
+          <div class="row buttons justify-content-evenly my-2">
+            <button onclick="closeUserWindow()" class="col-md-5 btn btn-cancel">
+              Cancel
+            </button>
+            <button
+              onclick="addUserInfo()"
+              class="col-md-5 btn btn-save text-white"
+              id="btnAdd"
+            >
+              <i class="fa-solid fa-check"></i> Save Contact
+            </button>
+            <button
+              onclick="updateUserInfo()"
+              class="col-md-5 btn btn-update text-white d-none"
+              id="btnUpdate"
+            >
+              <i class="fa-solid fa-check"></i> Save Contact
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="bg-slate-100 py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mt-5">
+              <div
+                class="inner rounded-4 py-3 px-4 d-flex align-items-center bg-white"
+              >
+                <div class="bg-blue-500 p-2 rounded-3">
+                  <i class="fa-solid text-white fa-users"></i>
+                </div>
+                <div class="ms-4">
+                  <p class="mb-0 text-sm text-gray-600 fw-normal">Total</p>
+                  <span id="totalUsers" class="fs-3 fw-bold"></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-5">
+              <div
+                class="inner rounded-4 py-3 px-4 d-flex align-items-center bg-white"
+              >
+                <div class="bg-amber-500 p-2 rounded-3">
+                  <i class="fa-solid text-white fa-star"></i>
+                </div>
+                <div class="ms-4">
+                  <p class="mb-0 text-sm text-gray-600 fw-normal">Favorites</p>
+                  <span class="fs-3 fw-bold" id="totalFav"></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-5">
+              <div
+                class="inner rounded-4 py-3 px-4 bg-white d-flex align-items-center"
+              >
+                <div class="bg-red-500 p-2 rounded-3">
+                  <i class="fa-solid fa-heart-pulse text-white"></i>
+                </div>
+                <div class="ms-4">
+                  <p class="mb-0 text-sm text-gray-600 fw-normal">Emergency</p>
+                  <span class="fs-3 fw-bold" id="totalEmergence"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-9 py-4">
+              <div>
+                <h3 class="mb-0 fw-bold">All Contacts</h3>
+                <p class="text-gray-500 text-sm" id="countContacts">
+                  Manage and organize your 0 contacts
+                </p>
+                <input
+                  oninput="searchUser()"
+                  type="text"
+                  name="searchInput"
+                  id="searchInput"
+                  class="form-control mb-3"
+                  placeholder="Search by name, phone, email..."
+                />
+
+                <div class="text-center py-5 mt-5" id="noContact"></div>
+              </div>
+              <div class="row row-cols-2 g-2 mt-3" id="showInfo">
+                <!-- <div>
+                  <div class="inner bg-white p-3 rounded-4">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="position-relative py-2 px-3 text-lg fw-medium bg-amber-400 rounded-3 text-white me-3 text-capitalize"
+                      >
+                        n
+                        <div
+                          class="position-absolute heart-pulse p-1 rounded-circle bg-red-500 border border-1 border-white"
+                        >
+                          <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <div
+                          class="position-absolute star-icon p-1 rounded-circle bg-amber-500 border border-1 border-white"
+                        >
+                          <i class="fa-solid fa-star"></i>
+                        </div>
+                      </div>
+                      <div class="contsct-img rounded-3 overflow-hidden me-3">
+                        <img src="images/img11.jpg" class="w-100" alt="" />
+                      </div>
+                      <div>
+                        <h6 class="mb-0">MARIAM</h6>
+                        <div class="d-flex mt-1">
+                          <div
+                            class="p-1 rounded-2 me-2 d-flex align-items-center justify-content-center text-xs bg-blue-100 text-blue-600"
+                          >
+                            <i class="fa-solid fa-phone"></i>
+                          </div>
+                          <span class="text-sm text-gray-500">8888123456</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex mt-3">
+                      <div
+                        class="p-1 rounded-2 me-2 d-flex align-items-center justify-content-center text-xs bg-purple-200 text-purple-600"
+                      >
+                        <i class="fa-solid fa-envelope"></i>
+                      </div>
+                      <span class="text-gray-600 text-sm"
+                        >mariam@gmail.com</span
+                      >
+                    </div>
+                    <div class="d-flex mt-2">
+                      <div
+                        class="p-1 rounded-2 me-2 d-flex align-items-center justify-content-center text-xs bg-green-200 text-green-700"
+                      >
+                        <i class="fa-solid fa-location-dot"></i>
+                      </div>
+                      <span class="text-gray-600 text-sm">tanta</span>
+                    </div>
+                    <div class="my-3">
+                      <span
+                        class="me-3 text-xs fw-medium bg-blue-100 text-blue-600 p-1 rounded-2"
+                        >family</span
+                      ><span
+                        class="text-xs fw-medium bg-red-50 text-red-500 p-1 rounded-2"
+                        ><i class="fa-solid fa-heart-pulse"></i> Emergency</span
+                      >
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-3">
+                      <div>
+                        <span
+                          class="p-1 bg-green-100 text-green-700 rounded-3 text-sm me-2"
+                          ><i class="fa-solid fa-phone"></i
+                        ></span>
+                        <span
+                          class="p-1 bg-purple-100 text-purple-700 rounded-3 text-sm"
+                          ><i class="fa-solid fa-envelope"></i
+                        ></span>
+                      </div>
+                      <div class="">
+                        <span class="text-gray-500 me-3 text-sm"
+                          ><i class="fa-regular fa-star"></i
+                        ></span>
+                        <span class="text-gray-500 me-3 text-sm"
+                          ><i class="fa-regular fa-heart"></i
+                        ></span>
+                        <span class="text-gray-500 me-3 text-sm"
+                          ><i class="fa-solid fa-pen"></i
+                        ></span>
+                        <span class="text-gray-500 me-3 text-sm"
+                          ><i class="fa-solid fa-trash"></i
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-3 py-4">
+              <div class="text-center bg-white rounded-4">
+                <div
+                  class="section-right-part d-flex align-items-center p-3 bg-amber-50 mb-4"
+                >
+                  <div class="me-2 p-2 text-white bg-amber-500 rounded-3">
+                    <i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="text-start">
+                    <h6 class="mb-0">Favorites</h6>
+                    <p class="text-xs text-gray-600">
+                      Quick access to starred contacts
+                    </p>
+                  </div>
+                </div>
+                <p class="mb-0 text-sm text-gray-500" id="noFav"></p>
+                <div class="p-3" id="favCardsContainer">
+                  <!-- 
+                  <div  
+                    class="d-flex justify-content-around py-2 justify-content-center align-items-center bg-gray-100 rounded-3"
+                  >
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <span
+                        class="px-3 py-2 bg-rose-500 rounded-3 me-2 text-white fw-medium text-capitalize"
+                        >n</span
+                      >
+                      <div class="text-start d-flex flex-column">
+                        <span class="mb-0 fw-normal">mariam</span>
+                        <span class="text-xs text-gray-400">01029651324</span>
+                      </div>
+                    </div>
+
+                    <div
+                      class="text-xs text-green-700 p-2 bg-green-100 rounded-3"
+                    >
+                      <i class="fa-solid fa-phone"></i>
+                    </div>
+
+                  </div> -->
+                </div>
+              </div>
+
+              <div class="text-center bg-white rounded-4 mt-3">
+                <div
+                  class="section-right-part d-flex align-items-center p-3 bg-rose-100 mb-4"
+                >
+                  <div class="me-2 p-2 text-white bg-red-500 rounded-3">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                  </div>
+                  <div class="text-start">
+                    <h6 class="mb-0">Emergency</h6>
+                    <p class="text-xs text-gray-600">
+                      mportant contacts for urgent calls
+                    </p>
+                  </div>
+                </div>
+                <p class="mb-0 text-sm text-gray-500" id="noEmergency">
+                  No emergency contacts
+                </p>
+                <div class="p-3" id="emergencyCardsContainer">
+                  <!-- <div
+                    class="d-flex justify-content-around py-2 justify-content-center align-items-center bg-gray-100 rounded-3"
+                  >
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <span
+                        class="px-3 py-2 bg-rose-500 rounded-3 me-2 text-white fw-medium text-capitalize"
+                        >n</span
+                      >
+                      <div class="text-start d-flex flex-column">
+                        <span class="mb-0 fw-normal">mariam</span>
+                        <span class="text-xs text-gray-400">01029651324</span>
+                      </div>
+                    </div>
+
+                    <div
+                      class="text-xs text-green-700 p-2 bg-green-100 rounded-3"
+                    >
+                      <i class="fa-solid fa-phone"></i>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
