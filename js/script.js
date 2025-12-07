@@ -10,11 +10,6 @@ var userImage = document.getElementById("userImage");
 var userFavorite = document.getElementById("userFavorite");
 var userEmergency = document.getElementById("userEmergency");
 
-//             recive
-function getBlob(file) {
-  return URL.createObjectURL(file);
-}
-
 // user window :
 var userWindow = document.getElementById("userWindow");
 function getUserInfo() {
@@ -29,7 +24,6 @@ var usersList = localStorage.getItem("userStorage")
   : [];
 
 displayUserInfo();
-
 var user;
 function addUserInfo() {
   user = {
@@ -41,22 +35,22 @@ function addUserInfo() {
     des: userDescription.value,
     fav: userFavorite.checked,
     emergency: userEmergency.checked,
-    // image: userImage.files[0]
-    //   ? `images/${userImage.files[0].name} `
-    //   : "images/img12.jpg",
 
-    //                                   send
-    image: userImage.files[0] ? getBlob(userImage.files[0]) : "", //falsey value ""
+    image: userImage.files[0]
+      ? `images/${userImage.files[0].name} `
+      : "",
+
+    // image: userImage.files[0] ? URL.createObjectURL(userImage.files[0]) : "",
   };
-
+  console.log(usersList[0].fav)
   usersList.push(user);
   localStorage.setItem("userStorage", JSON.stringify(usersList));
   displayUserInfo();
   clearUserInfo();
-  userWindow.classList.add("d-none");
+  closeUserWindow();
   btnAdd.classList.remove("d-none");
   btnUpdate.classList.add("d-none");
-  showAlert("Success!","User has been added successfully" ,"success")
+  showAlert("Success!", "User has been added successfully", "success");
 }
 
 function clearUserInfo() {
@@ -66,6 +60,8 @@ function clearUserInfo() {
   userAddress.value = null;
   userGroup.value = null;
   userDescription.value = null;
+  userFavorite.checked = null;
+  userEmergency.checked = null;
 }
 
 function displayUserInfo() {
@@ -234,8 +230,6 @@ function displayUserInfo() {
                           }
 
 
-                          
-                  
                     </div>
                     <div class="d-flex justify-content-between border-top pt-3">
                       <div>
@@ -246,13 +240,13 @@ function displayUserInfo() {
 
                       ${
                         usersList[i].fav == true
-                          ? `<span id="solidStar" onclick="changeIconStatus(${i},'fav')"   class=" me-3 text-sm star-icon2 p-2 rounded-3 "><i class="fa-solid fa-star"></i></span>`
-                          : `<span id="regularStar" onclick="changeIconStatus(${i},'fav')" class="text-gray-500 me-3 text-sm star-icon p-2 rounded-3"><i class="fa-regular fa-star"></i></span>`
+                          ? `<span  onclick="changeIcon(${i},'fav')"   class=" me-3 text-sm star-icon2 p-2 rounded-3 "><i class="fa-solid fa-star"></i></span>`
+                          : `<span  onclick="changeIcon(${i},'fav')" class="text-gray-500 me-3 text-sm star-icon p-2 rounded-3"><i class="fa-regular fa-star"></i></span>`
                       }
                         ${
                           usersList[i].emergency == true
-                            ? `<span onclick="changeIconStatus(${i},'emergency')" class="text-red-500 me-3 bg-red-50  text-sm heart-icon p-2 rounded-3"><i class="fa-solid fa-heart-pulse"></i></span>`
-                            : `<span onclick="changeIconStatus(${i},'emergency')" class="text-gray-500 me-3 text-sm heart-icon p-2 rounded-3"><i class="fa-regular fa-heart"></i></span>`
+                            ? `<span onclick="changeIcon(${i},'emergency')" class="text-red-500 me-3 bg-red-50  text-sm heart-icon p-2 rounded-3"><i class="fa-solid fa-heart-pulse"></i></span>`
+                            : `<span onclick="changeIcon(${i},'emergency')" class="text-gray-500 me-3 text-sm heart-icon p-2 rounded-3"><i class="fa-regular fa-heart"></i></span>`
                         }
                         <span onclick="setUserInfo(${i})" class="text-gray-500 me-3 text-sm pen-icon p-2 rounded-3"><i class="fa-solid fa-pen"></i></span>
                         <span onclick="deletUserInfo(${i})" class="text-gray-500 me-3 text-sm trash-icon p-2 rounded-3"><i class="fa-solid fa-trash"></i></span>
@@ -265,7 +259,7 @@ function displayUserInfo() {
     document.getElementById("showInfo").innerHTML = content;
     noContact.innerHTML = "";
   }
-  calcTotalFavAndEmergency();
+  totalFavAndEmergency();
   allContactsHeader();
   addRightFav();
   addRightEmergency();
@@ -277,7 +271,7 @@ function deletUserInfo(indexDelet) {
   localStorage.setItem("userStorage", JSON.stringify(usersList));
 
   displayUserInfo();
-    showAlert("Success!","User has been deleted successfully" ,"success")
+  showAlert("Success!", "User has been deleted successfully", "success");
 }
 
 var searchInput = document.getElementById("searchInput");
@@ -416,8 +410,7 @@ function setUserInfo(index) {
   userGroup.value = usersList[index].group;
   userAddress.value = usersList[index].address;
 
-  userWindow.classList.remove("d-none");
-
+  getUserInfo();
   btnUpdate.classList.remove("d-none");
   btnAdd.classList.add("d-none");
 }
@@ -437,53 +430,42 @@ function updateUserInfo() {
   usersList.splice(globalIndex, 1, user);
   localStorage.setItem("userStorage", JSON.stringify(usersList));
   displayUserInfo();
-  userWindow.classList.add("d-none");
+  closeUserWindow();
   btnAdd.classList.remove("d-none");
   btnUpdate.classList.add("d-none");
   clearUserInfo();
-    showAlert("Success!","User has been updated successfully" ,"success")
+  showAlert("Success!", "User has been updated successfully", "success");
 }
+
 // iconType = fav or emergence based on the clicked element
-function changeIconStatus(index, iconType) {
+function changeIcon(index, iconType) {
   usersList[index][iconType] = !usersList[index][iconType];
   localStorage.setItem("userStorage", JSON.stringify(usersList));
-
   displayUserInfo();
 }
 
-// function changeemergenceIcon(index) {
-//   usersList[index].emergency ?usersList[index].emergency=false :usersList[index].emergency=true
-//   displayUserInfo();
-// }
-
-function calcTotalFavAndEmergency() {
+function totalFavAndEmergency() {
   var totalFav = [];
 
   var totalEmergence = [];
 
   for (var i = 0; i < usersList.length; i++) {
-    usersList[i].fav && totalFav.push(usersList[i].fav);
+    usersList[i].fav == true && totalFav.push(usersList[i].fav);
 
-    usersList[i].emergency && totalEmergence.push(usersList[i].emergency);
+    usersList[i].emergency == true &&
+      totalEmergence.push(usersList[i].emergency);
   }
 
   document.getElementById("totalFav").innerHTML = totalFav.length;
   document.getElementById("totalEmergence").innerHTML = totalEmergence.length;
-}
 
-function allContactsHeader() {
-  var countContacts = document.getElementById("countContacts");
-
-  countContacts.innerHTML = `Manage and organize your ${
-    usersList.length
-  } contact${usersList.length > 1 ? `s` : ""}`;
 }
 
 function addRightFav() {
   var content = "";
   var totalFav = [];
   for (var i = 0; i < usersList.length; i++) {
-    if (usersList[i].fav) {
+    if (usersList[i].fav==true) {
       var userFav = {
         name: usersList[i].name,
         number: usersList[i].number,
@@ -571,34 +553,26 @@ function addRightEmergency() {
     document.getElementById("noEmergency").innerHTML = `No emergency yet`;
   }
 }
+function allContactsHeader() {
+  var countContacts = document.getElementById("countContacts");
 
-
-var userIconImg = document.getElementById("userIconImg");
-
-function uploadImage(element) {
-  var imageUrl = getBlob(element.files[0]);
-
-  if (imageUrl) {
-    userIconImg.innerHTML = `<img src="${imageUrl}" alt=""> `;
-  } else {
-    userIconImg.innerHTML = `
-    <i class="fa-solid fa-user"></i>
-    `;
-  }
+  countContacts.innerHTML = `Manage and organize your ${
+    usersList.length
+  } contact${usersList.length > 1 ? `s` : ""}`;
 }
+
 
 function showAlert(myTitle, myText, myIcon) {
   Swal.fire({
     title: myTitle,
     text: myText,
     icon: myIcon,
-    confirmButtonText :"ok",
+    confirmButtonText: "ok",
   });
 }
-/*displayUserInfo()   should be fired on 
-1- add new user
-2-change icon 
-3-delet
-4-updat
 
-*/
+
+// function changeemergenceIcon(index) {
+//   usersList[index].emergency ?usersList[index].emergency=false :usersList[index].emergency=true
+//   displayUserInfo();
+// }
