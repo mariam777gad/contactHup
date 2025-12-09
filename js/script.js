@@ -9,11 +9,14 @@ var btnAdd = document.getElementById("btnAdd");
 var userImage = document.getElementById("userImage");
 var userFavorite = document.getElementById("userFavorite");
 var userEmergency = document.getElementById("userEmergency");
-
+var headerModal = document.getElementById("headerModal");
+// var alertText = document.getElementById("alertText");
+// var alertNumber = document.getElementById("alertNumber");
 // user window :
 var userWindow = document.getElementById("userWindow");
 function getUserInfo() {
   userWindow.classList.remove("d-none");
+  headerModal.innerHTML = `Add new contacts`;
 }
 function closeUserWindow() {
   userWindow.classList.add("d-none");
@@ -26,31 +29,30 @@ var usersList = localStorage.getItem("userStorage")
 displayUserInfo();
 var user;
 function addUserInfo() {
-  user = {
-    name: userName.value,
-    number: userNumber.value,
-    email: userEmail.value,
-    address: userAddress.value,
-    group: userGroup.value,
-    des: userDescription.value,
-    fav: userFavorite.checked,
-    emergency: userEmergency.checked,
+  if (validation(userName ,'alertText')&&validation(userNumber,'alertNumber')) {
+    user = {
+      name: userName.value,
+      number: userNumber.value,
+      email: userEmail.value,
+      address: userAddress.value,
+      group: userGroup.value,
+      des: userDescription.value,
+      fav: userFavorite.checked,
+      emergency: userEmergency.checked,
 
-    image: userImage.files[0]
-      ? `images/${userImage.files[0].name} `
-      : "",
+      image: userImage.files[0] ? `images/${userImage.files[0].name} ` : "",
 
-    // image: userImage.files[0] ? URL.createObjectURL(userImage.files[0]) : "",
-  };
-  console.log(usersList[0].fav)
-  usersList.push(user);
-  localStorage.setItem("userStorage", JSON.stringify(usersList));
-  displayUserInfo();
-  clearUserInfo();
-  closeUserWindow();
-  btnAdd.classList.remove("d-none");
-  btnUpdate.classList.add("d-none");
-  showAlert("Success!", "User has been added successfully", "success");
+      // image: userImage.files[0] ? URL.createObjectURL(userImage.files[0]) : "",
+    };
+    usersList.push(user);
+    localStorage.setItem("userStorage", JSON.stringify(usersList));
+    displayUserInfo();
+    clearUserInfo();
+    closeUserWindow();
+    btnAdd.classList.remove("d-none");
+    btnUpdate.classList.add("d-none");
+    showAlert("Success!", "User has been added successfully", "success");
+  }
 }
 
 function clearUserInfo() {
@@ -413,6 +415,7 @@ function setUserInfo(index) {
   getUserInfo();
   btnUpdate.classList.remove("d-none");
   btnAdd.classList.add("d-none");
+  headerModal.innerHTML = `Update contacts`;
 }
 
 // user the global index here
@@ -458,14 +461,13 @@ function totalFavAndEmergency() {
 
   document.getElementById("totalFav").innerHTML = totalFav.length;
   document.getElementById("totalEmergence").innerHTML = totalEmergence.length;
-
 }
 
 function addRightFav() {
   var content = "";
   var totalFav = [];
   for (var i = 0; i < usersList.length; i++) {
-    if (usersList[i].fav==true) {
+    if (usersList[i].fav == true) {
       var userFav = {
         name: usersList[i].name,
         number: usersList[i].number,
@@ -561,7 +563,6 @@ function allContactsHeader() {
   } contact${usersList.length > 1 ? `s` : ""}`;
 }
 
-
 function showAlert(myTitle, myText, myIcon) {
   Swal.fire({
     title: myTitle,
@@ -571,8 +572,57 @@ function showAlert(myTitle, myText, myIcon) {
   });
 }
 
-
 // function changeemergenceIcon(index) {
 //   usersList[index].emergency ?usersList[index].emergency=false :usersList[index].emergency=true
 //   displayUserInfo();
 // }
+// function changeemergenceIcon(index) {
+//   usersList[index].emergency ?usersList[index].emergency=false :usersList[index].emergency=true
+//   displayUserInfo();
+// }
+
+//  dont forget return true / false-//
+function validationName() {
+  var regex = /^[a-z A-Z]{2,50}$/;
+  if (regex.test(userName.value)) {
+    console.log("hi");
+    alertText.classList.add("d-none");
+    return true;
+  } else {
+    console.log("try");
+    alertText.classList.remove("d-none");
+    return false;
+  }
+}
+///^[010 011 012 015]\d{10}$/
+///^[010 011 012 015][0-9]{10}$/
+///^(010|011|012|015)\d{8}$/
+function validationNumber() {
+  regex = /^[010 011 012 015]\d{10}$/;
+  if (regex.test(userNumber.value)) {
+    console.log("hii");
+    alertNumber.classList.add("d-none");
+    return true;
+  } else {
+    console.log("bye");
+    alertNumber.classList.remove("d-none");
+    return false;
+  }
+}
+
+function validation(element , text) {
+  var regex = {
+    userName: /^[a-z A-Z]{2,50}$/,
+    userNumber: /^(010|011|012|015)\d{8}$/,
+  };
+  var text=document.getElementById(text)
+  if (regex[element.id].test(element.value)) {
+    console.log("welcome");
+    text.classList.add("d-none")
+    return true;
+  } else {
+    console.log("sorry");
+    text.classList.remove("d-none")
+    return false;
+  }
+}
