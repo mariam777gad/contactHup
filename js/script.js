@@ -12,6 +12,7 @@ var userEmergency = document.getElementById("userEmergency");
 var headerModal = document.getElementById("headerModal");
 // var alertText = document.getElementById("alertText");
 // var alertNumber = document.getElementById("alertNumber");
+
 // user window :
 var userWindow = document.getElementById("userWindow");
 function getUserInfo() {
@@ -29,7 +30,10 @@ var usersList = localStorage.getItem("userStorage")
 displayUserInfo();
 var user;
 function addUserInfo() {
-  if (validation(userName ,'alertText')&&validation(userNumber,'alertNumber')) {
+  if (
+    validation(userName, "alertText") &&
+    validation(userNumber, "alertNumber")
+  ) {
     user = {
       name: userName.value,
       number: userNumber.value,
@@ -37,8 +41,8 @@ function addUserInfo() {
       address: userAddress.value,
       group: userGroup.value,
       des: userDescription.value,
-      fav: userFavorite.checked,
-      emergency: userEmergency.checked,
+      fav: userFavorite.checked, //return true /false
+      emergency: userEmergency.checked, //return true /false
 
       image: userImage.files[0] ? `images/${userImage.files[0].name} ` : "",
 
@@ -51,8 +55,28 @@ function addUserInfo() {
     closeUserWindow();
     btnAdd.classList.remove("d-none");
     btnUpdate.classList.add("d-none");
-    showAlert("Success!", "User has been added successfully", "success");
+    showAlert("Add!", "User has been added successfully", "success");
+  } else if (validation(userName, "alertText") == false) {
+    closeUserWindow();
+    showAlert(
+      "Invalid Name",
+      "Name should contain only letters and spaces (2-50 characters)",
+      "error"
+    );
+  } else {
+    closeUserWindow();
+    showAlert(
+      "Invalid Number",
+      "Please enter a valid Egyptian phone number",
+      "error"
+    );
   }
+
+  // for(var i=0 ; i<usersList.length ;i++){
+  //   if(userNumber.value==usersList[i].number){
+  //     console.log("hiiiiiiiiii")
+  //   }
+  // }
 }
 
 function clearUserInfo() {
@@ -453,7 +477,10 @@ function totalFavAndEmergency() {
   var totalEmergence = [];
 
   for (var i = 0; i < usersList.length; i++) {
-    usersList[i].fav == true && totalFav.push(usersList[i].fav);
+    // usersList[i].fav == true && totalFav.push(usersList[i].fav);
+    if (usersList[i].fav == true) {
+      totalFav.push(usersList[i].fav);
+    }
 
     usersList[i].emergency == true &&
       totalEmergence.push(usersList[i].emergency);
@@ -610,19 +637,19 @@ function validationNumber() {
   }
 }
 
-function validation(element , text) {
+function validation(element, text) {
   var regex = {
     userName: /^[a-z A-Z]{2,50}$/,
     userNumber: /^(010|011|012|015)\d{8}$/,
   };
-  var text=document.getElementById(text)
+  var text = document.getElementById(text);
   if (regex[element.id].test(element.value)) {
     console.log("welcome");
-    text.classList.add("d-none")
+    text.classList.add("d-none");
     return true;
   } else {
     console.log("sorry");
-    text.classList.remove("d-none")
+    text.classList.remove("d-none");
     return false;
   }
 }

@@ -51,12 +51,12 @@
         </div>
       </nav>
 
-      <section id="userWindow" class="container-fluid position-absolute d-none">
+      <section id="userWindow" class="container-fluid position-fixed d-none">
         <div
           class="row user-data-container position-absolute bg-white p-3 rounded-4 m-auto"
         >
           <div class="d-flex justify-content-between border-bottom pb-2">
-            <h5 class="fw-bold " id="headerModal" ></h5>
+            <h5 class="fw-bold" id="headerModal"></h5>
             <input
               onclick="closeUserWindow()"
               type="checkbox"
@@ -74,12 +74,7 @@
             <i class="fa-solid fa-user"></i>
           </div>
           <div class="text-center">
-            <input
-              type="file"
-              id="userImage"
-              name="userImage"
-              hidden
-            />
+            <input type="file" id="userImage" name="userImage" hidden />
             <label for="userImage">
               <span class="img-select bg-gray-200 p-2 rounded-2 text-gray-600"
                 ><i class="fa-solid fa-camera"></i>
@@ -93,29 +88,34 @@
               >Full Name <span class="text-red-500">*</span></label
             >
             <input
-            oninput="validation(this ,'alertText')"
+              oninput="validation(this ,'alertText')"
               type="text"
               name="userName"
               id="userName"
               class="form-control"
               placeholder="Enter full name"
             />
-            <p class="text-red-600 text-xs mt-2 d-none" id="alertText">Name should contain only letters and spaces (2-50 characters)</p>
+            <p class="text-red-600 text-xs mt-2 d-none" id="alertText">
+              Name should contain only letters and spaces (2-50 characters)
+            </p>
           </div>
           <div class="my-2">
             <label for="userNumber" class="text-gray-700 fw-medium mb-1 text-sm"
               >Phone Number <span class="text-red-500">*</span></label
             >
             <input
-            oninput="validation(this ,'alertNumber')"
+              oninput="validation(this ,'alertNumber')"
               type="number"
               name="userNumber"
               id="userNumber"
               class="form-control"
               placeholder="e.g.,01029651324"
             />
-            <p class="text-red-600 text-xs mt-2 d-none" id="alertNumber">Please enter a valid Egyptian phone number
+            <p class="text-red-600 text-xs mt-2 d-none" id="alertNumber">
+              Please enter a valid Egyptian phone number
+            </p>
           </div>
+
           <div class="my-2">
             <label for="userEmail" class="text-gray-700 fw-medium mb-1 text-sm"
               >Email Address</label
